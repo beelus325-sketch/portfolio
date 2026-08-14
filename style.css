@@ -148,6 +148,14 @@ section h2 { font-size: 28px; margin-bottom: 12px; }
   width: 100%; border-radius: 10px; display: block;
   border: 1px solid rgba(255, 255, 255, .08);
 }
+/* 作品集页：电脑端显示 PDF，手机端显示图片 */
+.pdf-only { display: block; }
+.mobile-only { display: none; }
+@media (max-width: 768px) {
+  .pdf-only { display: none; }
+  .mobile-only { display: block; }
+  .gallery.mobile-only { display: grid; }
+}
 .pdf-frame {
   width: 100%; height: 80vh; display: block;
   background: #fff; border: 0;
