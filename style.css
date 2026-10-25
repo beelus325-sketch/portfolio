@@ -30,13 +30,9 @@ body {
   color: var(--text);
   line-height: 1.6;
   letter-spacing: 0;
-  overflow-x: clip;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
-}
-/* 旧版 Windows 浏览器不支持 overflow: clip 时的回退 */
-@supports not (overflow: clip) {
-  body { overflow-x: hidden; }
 }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
@@ -46,14 +42,8 @@ img { display: block; max-width: 100%; }
 /* ========== 顶部导航（毛玻璃） ========== */
 header {
   position: sticky; top: 0; z-index: 50;
-  background: rgba(251, 251, 253, .8);
-  backdrop-filter: saturate(180%) blur(20px);
-  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  background: rgba(251, 251, 253, .96);
   border-bottom: 1px solid var(--line-soft);
-}
-/* 不支持毛玻璃时的回退：改为近乎不透明的浅色 */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  header { background: rgba(251, 251, 253, .98); }
 }
 nav {
   display: flex; align-items: center; justify-content: space-between;
@@ -93,15 +83,6 @@ nav a:hover { opacity: 1; }
 .hero-title .cn em {
   font-style: normal;
   color: #f5f5f7;
-}
-/* 渐变字仅在有 background-clip 支持的浏览器启用，避免 Windows 旧浏览器文字消失 */
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .hero-title .cn em {
-  background: linear-gradient(90deg, #f5f5f7 0%, #86868b 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  }
 }
 .hero-title .en { display: none; }
 .hero-lead {
@@ -320,7 +301,7 @@ section { padding: 104px 0; }
 }
 .cover { display: block; overflow: hidden; }
 .cover img {
-  width: 100%; aspect-ratio: 16 / 9; object-fit: cover;
+  width: 100%; height: auto;
   transition: transform .6s cubic-bezier(.2, .7, .2, 1);
 }
 .card:hover .cover img { transform: scale(1.03); }
@@ -370,8 +351,20 @@ section { padding: 104px 0; }
 .media.video-portrait video {
   width: auto; max-width: 460px; max-height: 80vh; margin: 0 auto;
 }
-.desc { max-width: 760px; margin-top: 30px; color: var(--text-2); font-size: 16px; line-height: 1.7; }
-.desc p + p { margin-top: 12px; }
+.desc {
+  width: 100%;
+  max-width: 860px;
+  margin: 32px auto 0;
+  color: var(--text-2);
+  font-size: 16px;
+  font-size: clamp(15px, 1.05vw, 17px);
+  line-height: 1.9;
+  letter-spacing: .01em;
+  text-align: left;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+.desc p + p { margin-top: 14px; }
 .gallery {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -393,6 +386,20 @@ section { padding: 104px 0; }
   width: 100%; height: 80vh; display: block;
   background: #fff; border: 0;
 }
+.doc-cover { position: relative; display: block; }
+.doc-cover img { width: 100%; height: auto; display: block; }
+.doc-cover-btn {
+  position: absolute; left: 50%; bottom: 24px;
+  transform: translateX(-50%);
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: 980px;
+  background: rgba(0, 0, 0, .72);
+  color: #fff;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.doc-cover:hover .doc-cover-btn { background: #0071e3; }
 .download {
   display: inline-block; margin-top: 18px;
   font-size: 14px; color: var(--accent);
@@ -513,6 +520,7 @@ footer {
 
   .pdf-frame { height: 70vh; }
   .detail { padding: 40px 0 72px; }
+  .desc { font-size: 15px; line-height: 1.85; margin-top: 24px; }
   .detail-nav { flex-direction: column; }
   .detail-nav .next { margin-left: 0; text-align: left; }
 }
