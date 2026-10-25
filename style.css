@@ -17,8 +17,9 @@
   --radius-md: 18px;
   --radius-sm: 12px;
   --pill: 980px;
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
-    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Variable",
+    "SF Pro Display", "SF Pro Text", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC", sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,11 +28,15 @@ body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
-  line-height: 1.5;
-  letter-spacing: -.01em;
+  line-height: 1.6;
+  letter-spacing: 0;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
+}
+/* 旧版 Windows 浏览器不支持 overflow: clip 时的回退 */
+@supports not (overflow: clip) {
+  body { overflow-x: hidden; }
 }
 a { color: inherit; text-decoration: none; }
 img { display: block; max-width: 100%; }
@@ -45,6 +50,10 @@ header {
   backdrop-filter: saturate(180%) blur(20px);
   -webkit-backdrop-filter: saturate(180%) blur(20px);
   border-bottom: 1px solid var(--line-soft);
+}
+/* 不支持毛玻璃时的回退：改为近乎不透明的浅色 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  header { background: rgba(251, 251, 253, .98); }
 }
 nav {
   display: flex; align-items: center; justify-content: space-between;
@@ -73,27 +82,35 @@ nav a:hover { opacity: 1; }
   margin-bottom: 28px;
 }
 .hero-title {
-  font-size: clamp(48px, 8vw, 104px);
-  line-height: 1.05;
-  letter-spacing: -.025em;
+  font-size: 72px; /* 旧浏览器回退 */
+  font-size: clamp(44px, 7.6vw, 96px);
+  line-height: 1.1;
+  letter-spacing: -.02em;
   font-weight: 600;
   color: #f5f5f7;
 }
 .hero-title .cn { display: block; }
 .hero-title .cn em {
   font-style: normal;
+  color: #f5f5f7;
+}
+/* 渐变字仅在有 background-clip 支持的浏览器启用，避免 Windows 旧浏览器文字消失 */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .hero-title .cn em {
   background: linear-gradient(90deg, #f5f5f7 0%, #86868b 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  }
 }
 .hero-title .en { display: none; }
 .hero-lead {
   margin: 24px auto 0;
   max-width: 720px;
+  font-size: 24px; /* 旧浏览器回退 */
   font-size: clamp(19px, 2.2vw, 28px);
   font-weight: 400;
-  letter-spacing: -.015em;
+  letter-spacing: -.01em;
   color: #a1a1a6;
 }
 .hero-quote {
@@ -128,7 +145,7 @@ nav a:hover { opacity: 1; }
   display: block;
   font-size: clamp(30px, 3.4vw, 44px);
   font-weight: 600;
-  letter-spacing: -.02em;
+  letter-spacing: -.015em;
   color: #f5f5f7;
 }
 .hero-stats span {
@@ -142,8 +159,8 @@ section { padding: 104px 0; }
 .sec-head h2 {
   font-size: clamp(30px, 4.6vw, 52px);
   font-weight: 600;
-  letter-spacing: -.02em;
-  line-height: 1.08;
+  letter-spacing: -.015em;
+  line-height: 1.15;
 }
 .sec-sub {
   margin-top: 14px;
@@ -170,7 +187,7 @@ section { padding: 104px 0; }
   font-size: clamp(20px, 2.2vw, 26px);
   font-weight: 500;
   line-height: 1.45;
-  letter-spacing: -.015em;
+  letter-spacing: -.01em;
 }
 .about-facts {
   display: grid;
@@ -268,7 +285,7 @@ section { padding: 104px 0; }
 .timeline-item h4 {
   font-size: clamp(18px, 1.9vw, 22px);
   font-weight: 600;
-  letter-spacing: -.015em;
+  letter-spacing: -.01em;
   margin: 6px 0 2px;
 }
 .timeline-role { color: var(--text-3); font-size: 13px; margin-bottom: 8px; }
@@ -308,7 +325,7 @@ section { padding: 104px 0; }
 .card-body h3 {
   font-size: clamp(19px, 1.9vw, 23px);
   font-weight: 600;
-  letter-spacing: -.015em;
+  letter-spacing: -.01em;
   margin-bottom: 6px;
 }
 .card-body p { color: var(--text-2); font-size: 14.5px; line-height: 1.6; }
@@ -332,7 +349,7 @@ section { padding: 104px 0; }
 .detail-head h1 {
   font-size: clamp(30px, 4.4vw, 48px);
   font-weight: 600;
-  letter-spacing: -.02em;
+  letter-spacing: -.015em;
   line-height: 1.12;
   margin: 12px 0 10px;
 }
